@@ -1,3 +1,5 @@
+
+
 function updateScore(game){
     let topScore=0;
     let bonus=0;
