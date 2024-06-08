@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
     <style>
+        .dice {
+
+        }
+        .card{
+
+        }
         .score {
             text-align: center;
             font-size: 18px;
@@ -12,15 +18,24 @@
 
 <body>
 
+<div id="game-container">
+    <div class="dice" id="dice-mat"></div>
+    <div class="card" id="score-card"></div>
+    <div class="score" id="game-score">Score: 0</div>
+</div>
+
 <script src="yatzee_engine.js"></script>
 <script src="dice.js"></script>
 <script src="yatzee_game.js"></script>
 
-<div id="game-container">
-    <div class="score" id="game-score">Score: 0</div>
-</div>
-
-
+<script>
+    function updateDisplay(){
+        const scoreCard = document.getElementById("score-card");
+        const diceMat = document.getElementById("dice-mat");
+        const scoreElement = document.getElementById("game-score");
+        scoreElement.textContent = `Score: ${game.score}`;
+    }
+</script>
 
 </body>
 </html>
