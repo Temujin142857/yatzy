@@ -28,7 +28,7 @@
         </tr>
         </thead>
         <tbody>
-        
+
         </tbody>
     </table>
     <div class="score" id="game-score">Score: 0</div>
@@ -44,14 +44,14 @@
         const diceMat = document.getElementById("dice-mat");
         const scoreElement = document.getElementById("game-score");
         scoreElement.textContent = `Score: ${game.score}`;
-        for (const box in game) {
+        for (const box in game.scoreBoxes) {
             const newRow = scoreCard.insertRow();
             const cell1 = newRow.insertCell(0);
             const cell2 = newRow.insertCell(1);
 
             // Set the text content of the new cells
             cell1.textContent = box.name;
-            cell2.textContent = box.value;
+            cell2.textContent = box.score;
         }
 
     }
@@ -61,21 +61,13 @@
         const diceMat = document.getElementById("dice-mat");
         const scoreElement = document.getElementById("game-score");
         scoreElement.textContent = `Score: ${game.score}`;
+        
+        //logic for updating a particular score
+        const row = scoreCard.rows[rowIndex];
+        const cell = row.cells[cellIndex];
+        cell.textContent = newValue;
     }
 
-    function addRow(category, value, table) {
-
-        // Create a new row
-        const newRow = table.insertRow();
-
-        // Insert new cells for name, age, and city
-        const cell1 = newRow.insertCell(0);
-        const cell2 = newRow.insertCell(1);
-
-        // Set the text content of the new cells
-        cell1.textContent = name;
-        cell2.textContent = age;
-    }
 
 </script>
 
