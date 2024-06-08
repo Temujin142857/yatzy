@@ -20,7 +20,17 @@
 
 <div id="game-container">
     <div class="dice" id="dice-mat"></div>
-    <div class="card" id="score-card"></div>
+    <table class="card" id="score-card">
+        <thead>
+        <tr>
+            <th>Category</th>
+            <th>Score</th>
+        </tr>
+        </thead>
+        <tbody>
+        
+        </tbody>
+    </table>
     <div class="score" id="game-score">Score: 0</div>
 </div>
 
@@ -29,12 +39,44 @@
 <script src="yatzee_game.js"></script>
 
 <script>
+    function initialiseGame(){
+        const scoreCard = document.getElementById('score-card').getElementsByTagName('tbody')[0];
+        const diceMat = document.getElementById("dice-mat");
+        const scoreElement = document.getElementById("game-score");
+        scoreElement.textContent = `Score: ${game.score}`;
+        for (const box in game) {
+            const newRow = scoreCard.insertRow();
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+
+            // Set the text content of the new cells
+            cell1.textContent = box.name;
+            cell2.textContent = box.value;
+        }
+
+    }
+
     function updateDisplay(){
-        const scoreCard = document.getElementById("score-card");
+        const scoreCard = document.getElementById('score-card').getElementsByTagName('tbody')[0];
         const diceMat = document.getElementById("dice-mat");
         const scoreElement = document.getElementById("game-score");
         scoreElement.textContent = `Score: ${game.score}`;
     }
+
+    function addRow(category, value, table) {
+
+        // Create a new row
+        const newRow = table.insertRow();
+
+        // Insert new cells for name, age, and city
+        const cell1 = newRow.insertCell(0);
+        const cell2 = newRow.insertCell(1);
+
+        // Set the text content of the new cells
+        cell1.textContent = name;
+        cell2.textContent = age;
+    }
+
 </script>
 
 </body>
