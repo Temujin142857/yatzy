@@ -4,6 +4,7 @@ class YatzyGame {
         this.rolls = 0;
         this.dice = [0, 0, 0, 0, 0];
         this.keep = [false, false, false, false, false];
+        this.scoreCard = 0;
     }
 
     roll() {
@@ -27,13 +28,15 @@ class YatzyGame {
         this.rolls = 0;
         this.dice = [0, 0, 0, 0, 0];
         this.keep = [false, false, false, false, false];
+        this.scoreCard = 0;
     }
 
     getGameState() {
         return {
             rolls: this.rolls,
             dice: this.dice,
-            keep: this.keep
+            keep: this.keep,
+            scoreCard: this.scoreCard
         };
     }
 }
