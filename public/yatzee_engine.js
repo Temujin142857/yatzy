@@ -4,28 +4,28 @@ function updateScore(game){
     let topScore=0;
     let bonus=0;
     let bottomScore=0;
-    for (const box in game.scoreBoxes){
-        switch (box.name){
+    for (const box in game.scoreCard){
+        switch (box){
             case "ones":
-                topScore+=box.score;
+                topScore+=game.scoreCard[box];
                 break;
             case "twos":
-                topScore+=box.score;
+                topScore+=game.scoreCard[box];
                 break;
             case "threes":
-                topScore+=box.score;
+                topScore+=game.scoreCard[box];
                 break;
             case "fours":
-                topScore+=box.score;
+                topScore+=game.scoreCard[box];
                 break;
             case "fives;":
-                topScore+=box.score;
+                topScore+=game.scoreCard[box];
                 break;
             case "sixes":
-                topScore+=box.score;
+                topScore+=game.scoreCard[box];
                 break;
             default:
-                bottomScore+=box.score;
+                bottomScore+=game.scoreCard[box];
         }
     }
     if(topScore>=63){bonus=35;}
@@ -47,7 +47,7 @@ function scoreTurn(game, scoreBox){
         case "fours":
             return numberScore(game.dice, 4);
             break;
-        case "fives;":
+        case "fives":
             return numberScore(game.dice, 5);
             break;
         case "sixes":
@@ -73,7 +73,7 @@ function scoreTurn(game, scoreBox){
             break;
         case "chance":
             let score=0;
-            for (const die in game.dice) {
+            for (const die of game.dice) {
                 score+=die;
             }
             return score;
@@ -83,7 +83,7 @@ function scoreTurn(game, scoreBox){
 
 function numberScore(dice, number){
     let score=0;
-    for (const die in dice) {
+    for (const die of dice) {
         if(die===number){
             score+=number;
         }
@@ -93,33 +93,36 @@ function numberScore(dice, number){
 
 function straight(dice, num){
     if(straightCheck(dice, dice[0])>=num){
-        return num===3? 30:40;
+        return num===4? 30:40;
     }
     else return 0;
 
 }
 
 function straightCheck(dice, die){
-    let num=0;
+    console.log(die)
+    console.log(dice)
+    let num=1;
     if(dice.includes(die+1)){
-        num+=straightCheck(dice.filter(function(d){return d===die+1}),die+1);
+        num+=straightCheck(dice.filter(function(d){return d!==die+1}),die+1);
     }
-    else if(dice.includes(die-1)){
-        num+=straightCheck(dice.filter(function(d){return d===die-1}),die-1);
+    if(dice.includes(die-1)){
+        num+=straightCheck(dice.filter(function(d){return d!==die-1}),die-1);
     }
+    console.log("munn",num)
     return num;
 }
 
 function threeOfaKind(dice){
-    return numberScore(dice, 3);
+    return numOfaKind(dice, 3);
 }
 
 function fourOfaKind(dice){
-    return numberScore(dice, 4);
+    return numOfaKind(dice, 4);
 }
 
 function fiveOfaKind(dice){
-    return numberScore(dice, 5)>0? 50:0;
+    return numOfaKind(dice, 5)>0? 50:0;
 }
 
 function numOfaKind(dice, num){
@@ -146,7 +149,7 @@ function fullHouse(dice){
 
 function dieMapper(dice){
     const dieMap= new Map();
-    for (const die in dice){
+    for (const die of dice){
         if(!dieMap.has(die)){
             dieMap.set(die,1);
         }else{
