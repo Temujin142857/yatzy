@@ -4,7 +4,8 @@
 
 <?php
 function roll() {
-    rand(1, 6);
+    $z=rand(1, 6);
+    return $z;
 }
 
 
