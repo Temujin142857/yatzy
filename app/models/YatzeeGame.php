@@ -26,6 +26,10 @@ function toggleDiceLock($i){
     $diceKeep[$i]=!$diceKeep[$i];
 }
     
+function getDice(){
+    global $dice;
+    return $dice;
+}
 
 ?>
 
