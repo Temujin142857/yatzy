@@ -4,13 +4,14 @@
 
 <?php
 
-use Yatzy\Dice;
+use Yatzy\app\models\Dice;
 
 $d = new Dice();
 
 $r=0;
 $dice=array(0,0,0,0,0);
 $diceKeep=array(false,false,false,false,false);
+$score=0;
 
 function rollDice(){
     global $d, $dice, $diceKeep;
@@ -29,6 +30,16 @@ function toggleDiceLock($i){
 function getDice(){
     global $dice;
     return $dice;
+}
+
+function getScore(){
+    global $score;
+    return $score;  
+}
+
+function setScore($n){
+    global $score;
+    $score=$n;
 }
 
 ?>

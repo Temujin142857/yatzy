@@ -26,6 +26,19 @@ for ($i= 1; $i<= 5; $i++) {
     echo "<br>";
 }
 
+use Yatzy\app\models\YatzeeEngine;
+
+$game = new YatzeeEngine();
+$game->roll();
+
+$scoreBox = "full_house"; 
+$score = scoreTurn($game, $scoreBox);
+echo "<p>Score for {$scoreBox}: {$score}</p>";
+
+$scoreBox = "yatzee";
+$score = scoreTurn($game, $scoreBox);
+echo "<p>Score for {$scoreBox}: {$score}</p>";
+?>
 
 ?>
 
