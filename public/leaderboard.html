@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yahtzee Leaderboard</title>
+    <link rel="stylesheet" href="leaderboardStyles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Yahtzee Leaderboard</h1>
+    <table id="leaderboard">
+        <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Player Name</th>
+            <th>Highest Score</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Leaderboard data will be inserted here dynamically -->
+        </tbody>
+    </table>
+    <div id="pagination">
+        <button id="prev" onclick="prevPage()">Previous</button>
+        <span id="page-number">Page 1</span>
+        <button id="next" onclick="nextPage()">Next</button>
+    </div>
+    <div id="no-data" style="display: none;">
+        No data available.
+    </div>
+</div>
+<script src="leaderboardScript.js"></script>
+</body>
+</html>
