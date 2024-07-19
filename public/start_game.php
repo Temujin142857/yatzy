@@ -1,4 +1,4 @@
-// start_game.php
+
 <?php
 session_start();
 
@@ -11,3 +11,5 @@ $_SESSION['game_state'] = [
 ];
 
 echo json_encode($_SESSION['game_state']);
+
+?>
