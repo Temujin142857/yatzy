@@ -7,7 +7,7 @@ if ($_SESSION['game_state']['rolls'] < 3) {
             $_SESSION['game_state']['dice'][$i] = rand(1, 6);
         }
     }
-    $_SESSION['game_state']['rolls']--;
+    $_SESSION['game_state']['rolls']++;
 }
 
 echo json_encode($_SESSION['game_state']);
