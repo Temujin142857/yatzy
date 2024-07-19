@@ -26,12 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = $input['action'];
 
         switch ($action) {
-            case 'roll_dice':
-                if ($gameState['rolls'] < 3) {
-                    $gameState['dice'] = YatzyEngine::rollDice();
-                    $gameState['rolls']++;
-                }
-                break;
             case 'score_category':
                 if (isset($input['category'])) {
                     $category = $input['category'];
