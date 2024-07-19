@@ -22,11 +22,10 @@ $gameState = $_SESSION['game_state'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
     
-    if (isset($input['action'])) {
-        $action = $input['action'];
+  
+       
 
-        switch ($action) {
-            case 'score_category':
+       
                 if (isset($input['category'])) {
                     $category = $input['category'];
                     if ($gameState['scores'][$category] === null) {
@@ -39,11 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $gameState['diceKeep'] = array(false, false, false, false, false);
                     }
                 }
-                break;
+             
      
         }
-    }
-}
 
 
 $_SESSION['game_state'] = $gameState;
