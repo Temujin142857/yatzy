@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         $gameState['rolls'] = 0;
                         $gameState['dice'] = [0, 0, 0, 0, 0];
+                        $gameState['diceKeep'] = array(false, false, false, false, false);
                     }
                 }
                 break;
