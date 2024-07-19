@@ -1,13 +1,13 @@
 <?php
 session_start();
 
-if ($_SESSION['rolls_left'] > 0) {
+if ($_SESSION['game_state']['rolls'] > 0) {
     for ($i = 0; $i < 5; $i++) {
-        if ($_SESSION['dice'][$i] === 0) {
-            $_SESSION['dice'][$i] = rand(1, 6);
+        if ($_SESSION['game_state']['dice'][$i] === 0) {
+            $_SESSION['game_state']['dice'][$i] = rand(1, 6);
         }
     }
-    $_SESSION['rolls_left']--;
+    $_SESSION['game_state']['rolls']--;
 }
 
 echo json_encode($_SESSION['game_state']);
