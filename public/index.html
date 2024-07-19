@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Yahtzee</title>
+    <link rel="stylesheet" href="indexStyles.css">
+</head>
+
+<body>
+
+<h1>Yahtzee</h1>
+<h4 style="margin-bottom: 0">Instructions:</h4>
+<p style="margin-bottom: 30px">Click the button to roll the dice, click on a die to keep it, you can reroll up to three times.
+    <br> Once you're finished rolling click on a row to choose where to put your points!</p>
+
+<div id="game-container" style="display: flex">
+    <div id="score-container">
+        <table class="card" id="score-card">
+            <thead>
+            <tr>
+                <th>Category</th>
+                <th>Score</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="score" id="game-score">Total Score: 0</div>
+    </div>
+    <div>
+        <div id="dice-mat" style="display: flex">
+            <p class="dice" id="die-1" onclick="toggleKeepDie(0)"></p>
+            <p class="dice" id="die-2" onclick="toggleKeepDie(1)"></p>
+            <p class="dice" id="die-3" onclick="toggleKeepDie(2)"></p>
+            <p class="dice" id="die-4" onclick="toggleKeepDie(3)"></p>
+            <p class="dice" id="die-5" onclick="toggleKeepDie(4)"></p>
+        </div>
+        <div style="margin-bottom: 40px">
+            <button onclick="rollDice()" style="cursor: pointer; margin-left: 115px; padding: 5px">roll</button>
+        </div>
+        <p id="remaining-rolls" style="margin-left: 30px; font-size: 22px">Remaining Rolls: 3</p>
+    </div>
+</div>
+<button onclick="fullReset()" style="cursor: pointer; padding: 5px">Reset</button>
+
+<div id="leaderboard-container">
+    <h2>Leaderboard</h2>
+    <table id="leaderboard">
+        <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Player Name</th>
+            <th>Highest Score</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Leaderboard data will be inserted here dynamically -->
+        </tbody>
+    </table>
+    <div id="pagination">
+        <button id="prev" onclick="prevPage()">Previous</button>
+        <span id="page-number">Page 1</span>
+        <button id="next" onclick="nextPage()">Next</button>
+    </div>
+    <div id="no-data" style="display: none;">
+        No data available.
+    </div>
+</div>
+
+<script>
+    let game;
+    const scoreCardDisplay = document.getElementById('score-card').getElementsByTagName('tbody')[0];
+    const dice = [document.getElementById("die-1"), document.getElementById("die-2"), document.getElementById("die-3"), document.getElementById("die-4"), document.getElementById("die-5")];
+    const scoreElement = document.getElementById("game-score");
+    const remainingElement = document.getElementById("remaining-rolls");
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        initialiseGame();
+        fetchLeaderboard();
+    });
+
+    function initialiseGame() {
+        fetch('start_game.php')
+            .then(response => response.json())
+            .then(data => {
+                game = data;
+                updateDisplay();
+            })
+            .catch(error => console.error('Error initializing game:', error));
+    }
+
+    function toggleKeepDie(num) {
+        game.diceKeep[num] = !game.diceKeep[num];
+        updateDisplay();
+    }
+
+    function rollDice() {
+        fetch('roll_dice.php', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {    game = data;
+                updateDisplay();
+            })
+            .catch(error => console.error('Error rolling dice:', error));
+    }
+
+    function saveScore(category) {
+        if (game.scores[category] === null) {
+            const score = scoreTurn(game, category);
+            game.scores[category] = score;
+            game.total_score = updateScore(game);
+            game.rolls = 0;
+            game.dice = [0, 0, 0, 0, 0];
+            game.diceKeep = [false, false, false, false, false];
+            updateServerState();
+        }
+    }
+
+    function updateServerState() {
+        fetch('update_gamestate.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(game)
+        })
+            .then(response => response.json())
+            .then(data => {
+                game = data;
+                updateDisplay();
+            })
+            .catch(error => console.error('Error updating game state:', error));
+    }
+
+    function updateDisplay() {
+        scoreElement.textContent = `Total Score: ${game.total_score}`;
+        remainingElement.textContent = `Remaining Rolls: ${3 - game.rolls}`;
+
+        for (let i = 0; i < game.dice.length; i++) {
+            dice[i].textContent = game.dice[i] !== 0 ? game.dice[i] : '';
+            dice[i].style.border = game.diceKeep[i] ? '2px solid green' : 'none';
+        }
+
+        for (const category in game.scores) {
+            let existingRow = scoreCardDisplay.querySelector(`tr[data-category="${category}"]`);
+            if (existingRow) {
+                existingRow.cells[1].textContent = game.scores[category] !== null ? game.scores[category] : '';
+            }
+        }
+    }
+
+    function fullReset() {
+        initialiseGame();
+    }
+
+    // Leaderboard functions
+
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    let leaderboardData = [];
+
+    function fetchLeaderboard() {
+        fetch('get_leaderboard.php')
+            .then(response => response.json())
+            .then(data => {
+                leaderboardData = data;
+                renderLeaderboard();
+            })
+            .catch(error => console.error('Error fetching leaderboard:', error));
+    }
+
+    function renderLeaderboard() {
+        const leaderboardBody = document.getElementById('leaderboard').getElementsByTagName('tbody')[0];
+        leaderboardBody.innerHTML = '';
+
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedData = leaderboardData.slice(start, end);
+
+        paginatedData.forEach((player, index) => {
+            const row = document.createElement('tr');
+
+            const rankCell = document.createElement('td');
+            rankCell.textContent = start + index + 1;
+            row.appendChild(rankCell);
+
+            const nameCell = document.createElement('td');
+            nameCell.textContent = player.player;
+            row.appendChild(nameCell);
+
+            const scoreCell = document.createElement('td');
+            scoreCell.textContent = player.score;
+            row.appendChild(scoreCell);
+
+            leaderboardBody.appendChild(row);
+        });
+
+        document.getElementById('page-number').textContent = `Page ${currentPage}`;
+        document.getElementById('prev').disabled = currentPage === 1;
+        document.getElementById('next').disabled = end >= leaderboardData.length;
+    }
+
+    function nextPage() {
+        currentPage++;
+        renderLeaderboard();
+    }
+
+    function prevPage() {
+        currentPage--;
+        renderLeaderboard();
+    }
+</script>
+
+</body>
+</html>
