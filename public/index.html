@@ -83,21 +83,21 @@
             .then(response => response.json())
             .then(data => {
                 game = data;
-                updateDisplay();
+                updateServerState();
             })
             .catch(error => console.error('Error initializing game:', error));
     }
 
     function toggleKeepDie(num) {
         game.diceKeep[num] = !game.diceKeep[num];
-        updateDisplay();
+        updateServerState();
     }
 
     function rollDice() {
         fetch('roll_dice.php', { method: 'POST' })
             .then(response => response.json())
             .then(data => {    game = data;
-                updateDisplay();
+                updateServerState();
             })
             .catch(error => console.error('Error rolling dice:', error));
     }
