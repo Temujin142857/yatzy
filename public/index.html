@@ -96,7 +96,8 @@
     function rollDice() {
         fetch('roll_dice.php', { method: 'POST' })
             .then(response => response.json())
-            .then(data => {    game = data;
+            .then(data => {game = data;
+                console.log(data)
                 updateDisplay();
             })
             .catch(error => console.error('Error rolling dice:', error));
@@ -180,9 +181,14 @@
 
     function fetchLeaderboard() {
         fetch('get_leaderboard.php')
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response:', response); // Debug line to log the response object
+                return response.json();
+            })
             .then(data => {
+                console.log('Data:', data);
                 leaderboardData = data;
+                console.log(leaderboardData)
                 renderLeaderboard();
             })
             .catch(error => console.error('Error fetching leaderboard:', error));
@@ -192,11 +198,16 @@
         const leaderboardBody = document.getElementById('leaderboard').getElementsByTagName('tbody')[0];
         leaderboardBody.innerHTML = '';
 
+        // Convert the leaderboard object into an array of [name, score] pairs and sort by score
+        const leaderboardArray = Object.entries(leaderboardData)
+            .sort(([, scoreA], [, scoreB]) => scoreB - scoreA); // Sort in descending order
+
+        // Paginate the data
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
-        const paginatedData = leaderboardData.slice(start, end);
+        const paginatedData = leaderboardArray.slice(start, end);
 
-        paginatedData.forEach((player, index) => {
+        paginatedData.forEach(([name, score], index) => {
             const row = document.createElement('tr');
 
             const rankCell = document.createElement('td');
@@ -204,11 +215,11 @@
             row.appendChild(rankCell);
 
             const nameCell = document.createElement('td');
-            nameCell.textContent = player.player;
+            nameCell.textContent = name;
             row.appendChild(nameCell);
 
             const scoreCell = document.createElement('td');
-            scoreCell.textContent = player.score;
+            scoreCell.textContent = score;
             row.appendChild(scoreCell);
 
             leaderboardBody.appendChild(row);
@@ -216,9 +227,8 @@
 
         document.getElementById('page-number').textContent = `Page ${currentPage}`;
         document.getElementById('prev').disabled = currentPage === 1;
-        document.getElementById('next').disabled = end >= leaderboardData.length;
+        document.getElementById('next').disabled = end >= leaderboardArray.length;
     }
-
     function nextPage() {
         currentPage++;
         renderLeaderboard();

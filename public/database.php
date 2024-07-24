@@ -1,28 +1,48 @@
 <?php
 
-require __DIR__.'/vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
-//retrieval
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\ServiceAccount;
+
+$factory = (new Factory)
+    ->withServiceAccount(__DIR__.'/../config/credentials.json')
+    ->withDatabaseUri('https://yatzee-4511e-default-rtdb.firebaseio.com/');
 
 $database = $factory->createDatabase();
 
-$reference = $database->getReference('path/to/child/location');
+function getHighScores() {
+    error_log('test1', 3, __DIR__.'/logs.txt');
+    global $database;
+    $value = getValue('HighScores'); // Ensure the correct path is passed
+    return $value;
+}
 
-$snapshot = $reference->getSnapshot();
-
-$value = $snapshot->getValue();
-
+function getValue($path) {
+    global $database;
+    error_log('test8', 3, __DIR__.'/logs.txt');
+    $reference = $database->getReference($path); // Use the $path parameter
+    
+    // Debug: Log if the reference is correct
+    error_log('test4', 3, __DIR__.'/logs.txt');
+    
+    $snapshot = $reference->getSnapshot();
+    
+    // Debug: Log the snapshot value
+    error_log('other', 3, __DIR__.'/logs.txt');
+    
+    return $snapshot->getValue();
+}
 
 //saving
 
-$database->getReference('config/website')
+$database->getReference('HighScores')
     ->set([
-        'name' => 'My Application',
-        'emails' => [
-            'support' => 'support@example.com',
-            'sales' => 'sales@example.com',
-        ],
-        'website' => 'https://app.example.com',
+        'Tony' => 100,
+        'Gator' => 120,
+        'Gru' => 140,
     ]);
 
-$database->getReference('config/website/name')->set('New name');
+//$database->getReference('config/website/name')->set('New name');
+
+
