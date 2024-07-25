@@ -17,3 +17,9 @@
 - **General Design:** The layout shows the scoreboard on the left, with the dice and buttons to the right.
 - **Soreboard** The scoreboard is a table setup to mimic the origional yatzee scorecard. Each row can be clicked to save the score for the turn in that row.
 - **Starting/Ending** The game starts with all blank scores, and ends once every row has been filled. To restart the game simply click the reset button and it will reset the dice and scores.
+
+
+existing bugs:
+rolling dice not giving new values
+saving not being called from ui
+clicking on a row to end turn needs to implemented again
