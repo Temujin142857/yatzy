@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($gameState['scores'][$category] === null) {
                         $score = YatzyEngine::calculateScore($category, $gameState['dice']);
                         $gameState['scores'][$category] = $score;
-                        $gameState['total_score'] += $score;
+                        $gameState['total_score'] = YatzyEngine::updateScore($gameState);
                         
                         $gameState['rolls'] = 0;
                         $gameState['dice'] = [0, 0, 0, 0, 0];

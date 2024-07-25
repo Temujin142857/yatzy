@@ -20,29 +20,27 @@ function getHighScores() {
 
 function getValue($path) {
     global $database;
-    error_log('test8', 3, __DIR__.'/logs.txt');
-    $reference = $database->getReference($path); // Use the $path parameter
-    
-    // Debug: Log if the reference is correct
-    error_log('test4', 3, __DIR__.'/logs.txt');
-    
+    $reference = $database->getReference($path);
     $snapshot = $reference->getSnapshot();
-    
-    // Debug: Log the snapshot value
-    error_log('other', 3, __DIR__.'/logs.txt');
-    
+    error_log('data loaded:', 3, __DIR__.'/logs.txt');
+    error_log($snapshot, 3, __DIR__.'/logs.txt');
+
     return $snapshot->getValue();
 }
 
 //saving
 
-$database->getReference('HighScores')
-    ->set([
-        'Tony' => 100,
-        'Gator' => 120,
-        'Gru' => 140,
-    ]);
+function savePlayerScore($playerName, $score) {
+    global $database;
 
-//$database->getReference('config/website/name')->set('New name');
+    // Reference to the HighScores node
+    $reference = $database->getReference('HighScores');
+
+    // Update the player's score
+    $reference->getChild($playerName)->set($score);
+
+    // Debug: Log the operation
+    error_log("Player $playerName scored $score. Data saved to Firebase.");
+}
 
 
