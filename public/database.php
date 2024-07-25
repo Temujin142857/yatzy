@@ -4,10 +4,21 @@ require __DIR__.'/../vendor/autoload.php';
 
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\ServiceAccount;
+use Dotenv\Dotenv;
 
-$factory = (new Factory)
-    ->withServiceAccount(__DIR__.'/../config/credentials.json')
-    ->withDatabaseUri('https://yatzee-4511e-default-rtdb.firebaseio.com/');
+// Load environment variables
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+// Get the Firebase credentials from the environment variable
+$firebaseCredentials = json_decode($_ENV['FIREBASE_CREDENTIALS'], true);
+
+// Initialize Firebase
+$serviceAccount = ServiceAccount::fromArray($firebaseCredentials);
+$firebase = (new Factory)
+    ->withServiceAccount($serviceAccount)
+    ->withDatabaseUri('https://yatzee-4511e-default-rtdb.firebaseio.com/') // Replace with your database URL
+
 
 $database = $factory->createDatabase();
 
