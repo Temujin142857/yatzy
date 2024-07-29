@@ -149,34 +149,57 @@
         }
 
         for (const category in game.scores) {
-    // Check if a row for this category already exists
-    let existingRow = scoreCardDisplay.querySelector(`tr[data-category="${category}"]`);
-    
-    if (existingRow) {
-        // Update the existing row
-        existingRow.cells[1].textContent = game.scores[category] !== null ? game.scores[category] : '';
-    } else {
-        // Create a new row for this category
-        let newRow = document.createElement('tr');
-        newRow.setAttribute('data-category', category);
+            // Check if a row for this category already exists
+            let existingRow = scoreCardDisplay.querySelector(`tr[data-category="${category}"]`);
 
-        // Create cells for score and category
-        let scoreCell = document.createElement('td');
-        let categoryCell = document.createElement('td');
+            if (existingRow) {
+                // Update the existing row
+                existingRow.cells[1].textContent = game.scores[category] !== null ? game.scores[category] : '';
+            } else {
+                // Create a new row for this category
+                let newRow = document.createElement('tr');
+                newRow.setAttribute('data-category', category);
 
-        // Set the cell contents
-        scoreCell.textContent = category;
-        categoryCell.textContent = game.scores[category] !== null ? game.scores[category] : '';
+                // Create cells for score and category
+                let scoreCell = document.createElement('td');
+                let categoryCell = document.createElement('td');
 
-        // Append cells to the row
-        newRow.appendChild(scoreCell);
-        newRow.appendChild(categoryCell);
+                // Set the cell contents
+                scoreCell.textContent = category;
+                categoryCell.textContent = game.scores[category] !== null ? game.scores[category] : '';
 
-        // Append the new row to the table
-        scoreCardDisplay.appendChild(newRow);
+                // Append cells to the row
+                newRow.appendChild(scoreCell);
+                newRow.appendChild(categoryCell);
+                newRow.classList.add('table-row');
+
+                // Append the new row to the table
+                scoreCardDisplay.appendChild(newRow);
+                newRow.onclick = function() {
+                    saveRow(category);
+                };
+            }
+        }
     }
-}
-}
+
+    function saveRow(category){
+        fetch('calculate_score.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ category: category })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('API row saving response:', data);
+                game = data;
+                updateDisplay();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
     
 
     function fullReset() {
