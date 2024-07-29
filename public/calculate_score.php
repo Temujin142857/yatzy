@@ -1,14 +1,13 @@
 <?php
 session_start();
-include 'YatzyEngine.php';
+include 'yatzy_engine.js';
 
 $data = json_decode(file_get_contents('php://input'), true);
 $category = $data['category'];
-$game = $data['category']
-$scoreBox = $data['category']
+
 
 if (!isset($_SESSION['scores'][$category])) {
-    $score = YatzyEngine::scoreTurn($game, $scoreBox);
+    $score = yatzy_engine::scoreTurn($game, $category);
     $_SESSION['scores'][$category] = $score;
     $_SESSION['score'] += $score;
     $_SESSION['dice'] = [0,0,0,0,0];
