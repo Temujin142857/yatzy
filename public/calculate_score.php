@@ -3,6 +3,7 @@ session_start();
 include 'YatzyEngine.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
+echo $data;
 $category = $data['category'];
 $game = $data['category']
 $scoreBox = $data['category']

@@ -114,6 +114,15 @@
             .catch(error => console.error('Error rolling dice:', error));
     }
 
+    function calculateScore(category) {
+        fetch('calculate_score.php?category=${category}', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {game = data;
+                console.log(data)
+                updateDisplay();
+            })
+            .catch(error => console.error('Error calculating the score:', error));
+    }
    
 
     function updateServerState() {
