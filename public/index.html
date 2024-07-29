@@ -90,8 +90,19 @@
 
     function toggleKeepDie(num) {
         game.diceKeep[num] = !game.diceKeep[num];
+        toggleDiceKeep(num);
         updateDisplay();
     }
+
+    function toggleDiceKeep(index) {
+            fetch(`toggle_dice_keep.php?index=${index}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    game = data;
+                    updateDisplay();
+                })
+                .catch(error => console.error('Error toggling dice keep:', error));
+        }
 
     function rollDice() {
         fetch('roll_dice.php', { method: 'POST' })
