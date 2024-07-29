@@ -103,17 +103,7 @@
             .catch(error => console.error('Error rolling dice:', error));
     }
 
-    function saveScore(category) {
-        if (game.scores[category] === null) {
-            const score = scoreTurn(game, category);
-            game.scores[category] = score;
-            game.total_score = updateScore(game);
-            game.rolls = 0;
-            game.dice = [0, 0, 0, 0, 0];
-            game.diceKeep = [false, false, false, false, false];
-            updateServerState();
-        }
-    }
+   
 
     function updateServerState() {
         fetch('update_gamestate.php', {

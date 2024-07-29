@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html>
-<body>
-
 <?php
-function roll() {
-    $z=rand(1, 6);
-    return $z;
+class Dice {
+    public static function roll() {
+        return rand(1, 6);
+    }
 }
-
-
 ?>
-
-</body>
-</html>

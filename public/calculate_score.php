@@ -11,7 +11,7 @@ if (!isset($_SESSION['scores'][$category])) {
     $score = YatzyEngine::scoreTurn($game, $scoreBox);
     $_SESSION['scores'][$category] = $score;
     $_SESSION['score'] += $score;
-    $_SESSION['dice'] = array(0,0,0,0,0);
+    $_SESSION['dice'] = [0,0,0,0,0];
     $_SESSION['rolls'] = 0;
 }
 
