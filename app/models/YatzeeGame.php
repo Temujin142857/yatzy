@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<html>
-<body>
 
 <?php
 
@@ -43,6 +40,3 @@ function setScore($n){
 }
 
 ?>
-
-</body>
-</html>

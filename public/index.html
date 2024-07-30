@@ -114,15 +114,7 @@
             .catch(error => console.error('Error rolling dice:', error));
     }
 
-    function calculateScore(category) {
-        fetch('calculate_score.php?category=${category}', { method: 'POST' })
-            .then(response => response.json())
-            .then(data => {game = data;
-                console.log(data)
-                updateDisplay();
-            })
-            .catch(error => console.error('Error calculating the score:', error));
-    }
+  
    
 
     function updateServerState() {
@@ -181,25 +173,30 @@
             }
         }
     }
+    function saveRow(category) {
+    fetch(`calculate_score.php`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ category: category })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw new Error(err.error); });
+        }
+        return response.json();
+    })
+    .then(data => {
+        game = data.game_state;
+        console.log('API row saving response:', data);
+        updateDisplay();
+    })
+    .catch(error => {
+        console.error('Error calculating the score:', error);
+    });
+}
 
-    function saveRow(category){
-        fetch('calculate_score.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ category: category })
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('API row saving response:', data);
-                game = data;
-                updateDisplay();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
     
 
     function fullReset() {
