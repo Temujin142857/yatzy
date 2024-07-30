@@ -10,9 +10,6 @@ error_reporting(E_ALL);
 include 'YatzyEngine.php';
 include 'YatzyGame.php';
 
-use Yatzy\app\models\YatzyGame;
-use Yatzy\app\models\YatzyEngine;
-
 // Set response headers
 header('Content-Type: application/json');
 
@@ -31,45 +28,31 @@ if (!isset($data['category'])) {
     exit();
 }
 
-// Ensure the game state is set
-if (!isset($_SESSION['game_state'])) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Game state not initialized.']);
-    exit();
-}
-
+// Get the category from the request
 $category = $data['category'];
 
-// Create or retrieve the game object from session
-if (!isset($_SESSION['game'])) {
-    $game = new YatzyGame();
-    $_SESSION['game'] = serialize($game);
-} else {
-    $game = unserialize($_SESSION['game']);
-}
+// Initialize the game state from the session
+$game = new YatzyGame();
+$game->setDice($_SESSION['game_state']['dice']);
+$game->setDiceKeep($_SESSION['game_state']['diceKeep']);
+$game->setScore($_SESSION['game_state']['total_score']);
 
-// Calculate the score for the specified category
 try {
-    $score = YatzyEngine::scoreTurn($game, $category);
-
-    // Debugging: Print the calculated score
-    error_log("Calculated score for category $category: $score");
-
-    // Update the session with the calculated score
+    // Calculate the score for the specified category
+    $score = scoreTurn($game, $category);
     $_SESSION['game_state']['scores'][$category] = $score;
-
-    // Optionally, update the total score
-    $_SESSION['game_state']['total_score'] = array_sum($_SESSION['game_state']['scores']);
-
-    // Save the game object back to the session
-    $_SESSION['game'] = serialize($game);
-
-    // Return the updated game state as JSON
-    echo json_encode([
+    $_SESSION['game_state']['total_score'] += $score;
+    
+    // Prepare the response data
+    $response = [
         'game_state' => $_SESSION['game_state'],
         'score' => $score
-    ]);
+    ];
+    
+    // Output the response as JSON
+    echo json_encode($response);
 } catch (Exception $e) {
+    // Handle any errors that occur during score calculation
     http_response_code(500);
     echo json_encode(['error' => $e->getMessage()]);
 }
