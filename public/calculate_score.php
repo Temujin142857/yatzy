@@ -54,7 +54,7 @@ echo json_encode($_SESSION['game_state']);
             case "yatzy":
                 return fiveOfaKind($game);
             case "chance":
-                return array_sum($game->getDice());
+                return array_sum($game);
             default:
                 return 0;
         }
