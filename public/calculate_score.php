@@ -16,6 +16,7 @@ if(isset($_GET['category'])){
         $_SESSION['game_state']['totale_score'] = $score;
         $_SESSION['game_state']['dice'] = [0,0,0,0,0];
         $_SESSION['game_state']['rolls'] = 0;
+        $_SESSION['game_state']['diceKeep'] = [false, false, false, false, false, false];
     }
 }
     
