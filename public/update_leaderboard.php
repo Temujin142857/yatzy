@@ -1,3 +1,4 @@
+
 <?php
 
 require 'Database.php';
@@ -12,7 +13,7 @@ if (!isset($_SESSION['leaderboard'])) {
 
 $data = json_decode(file_get_contents('php://input'), true);
 $new_score = $data['score'];
-$new_player = isset($data['player']) ? $data['player'] : 'Anonymous'; 
+$new_player = isset($data['name']) ? $data['name'] : 'Anonymous';
 
 
 $_SESSION['leaderboard'][$new_player] = $new_score;
