@@ -2,20 +2,27 @@
 
 session_start();
 
-$data = json_decode(file_get_contents('php://input'), true);
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 
-$category = $data['category'];
 //error_log('\n Received category: ' . $_SESSION['game_state']['dice'], 3, __DIR__.'/logs.txt');
-
-if (!isset($_SESSION['game_state']['scores'][$category])) {    
-    $score = scoreTurn($_SESSION['game_state']['dice'], $category);
-    $_SESSION['game_state']['scores'][$category] = $score;
-    $_SESSION['game_state']['score'] += $score;
-    $_SESSION['game_state']['dice'] = [0,0,0,0,0];
-    $_SESSION['game_state']['rolls'] = 0;
+if(isset($_GET['category'])){
+    $category = (string)$_GET['category'];
+    if (!isset($_SESSION['game_state']['scores'][$category])) {    
+    
+        $score = scoreTurn($_SESSION['game_state']['dice'], $category);
+        $_SESSION['game_state']['scores'][$category] = $score;
+        $_SESSION['game_state']['totale_score'] = $score;
+        $_SESSION['game_state']['dice'] = [0,0,0,0,0];
+        $_SESSION['game_state']['rolls'] = 0;
+    }
 }
+    
 
 
+header('Content-Type: application/json');
+error_log('Received category: ' . implode($_SESSION['game_state']['scores']), 3, __DIR__.'/logs.txt');
 echo json_encode($_SESSION['game_state']);
 
 

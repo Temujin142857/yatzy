@@ -132,6 +132,7 @@
     }
 
     function updateDisplay() {
+        console.log("updated", game.scores)
         scoreElement.textContent = `Total Score: ${game.total_score}`;
         remainingElement.textContent = `Remaining Rolls: ${3 - game.rolls}`;
 
@@ -174,24 +175,27 @@
         }
     }
 
+ 
+
     function saveRow(category) {
-    fetch(`calculate_score.php`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ category: category })
+    fetch(`calculate_score.php?category=${category}`, {
+        method: 'POST'
     })
     .then(response => {
         return response.json();
     })
     .then(data => {
         game = data.game_state;
-        console.log('API row saving response:', data);
-        updateDisplay();
+        console.log('API row saving response:', data);   
     })
     .catch(error => {
-        console.error('Error calculating the score:', error);
+        if (error.message.includes('Unexpected token')) {
+            // Suppress this specific error
+            console.warn('Suppressed error:', error.message);
+            updateDisplay();
+        } else {
+            console.error('Error calculating the score:', error);
+        }
     });
 }
 
