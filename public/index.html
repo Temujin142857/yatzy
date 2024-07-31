@@ -173,6 +173,7 @@
             }
         }
     }
+
     function saveRow(category) {
     fetch(`calculate_score.php`, {
         method: 'POST',
@@ -182,9 +183,6 @@
         body: JSON.stringify({ category: category })
     })
     .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => { throw new Error(err.error); });
-        }
         return response.json();
     })
     .then(data => {
