@@ -40,7 +40,7 @@
         <p id="remaining-rolls" style="margin-left: 30px; font-size: 22px">Remaining Rolls: 3</p>
     </div>
 </div>
-<button onclick="fullReset()" style="cursor: pointer; padding: 5px">Reset</button>
+<button onclick="fullReset()" style="cursor: pointer; padding: 5px">Reset and Save</button>
 
 <div id="leaderboard-container">
     <h2>Leaderboard</h2>
@@ -202,6 +202,7 @@
     
 
     function fullReset() {
+        addToLeaderboard('name', game.total_score);
         initialiseGame();
     }
 
@@ -224,6 +225,25 @@
                 renderLeaderboard();
             })
             .catch(error => console.error('Error fetching leaderboard:', error));
+    }
+
+    function addToLeaderboard(player, score) {
+        fetch('update_leaderboard.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ player: player, score: score })
+        })
+            .then(response => response.json())
+            .then(data => {
+                leaderboardData=data;
+                console.log(leaderboardData)
+                renderLeaderboard(); // Function to update your leaderboard display
+            })
+            .catch(error => {
+                console.error('Error adding to leaderboard:', error);
+            });
     }
 
     function renderLeaderboard() {

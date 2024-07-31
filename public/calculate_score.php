@@ -13,7 +13,7 @@ if(isset($_GET['category'])){
     
         $score = scoreTurn($_SESSION['game_state']['dice'], $category);
         $_SESSION['game_state']['scores'][$category] = $score;
-        $_SESSION['game_state']['total_score'] = $score;
+        $_SESSION['game_state']['total_score'] = updateScore($_SESSION['game_state']);
         $_SESSION['game_state']['dice'] = [0,0,0,0,0];
         $_SESSION['game_state']['rolls'] = 0;
         $_SESSION['game_state']['diceKeep'] = [false, false, false, false, false, false];
@@ -120,6 +120,32 @@ echo json_encode($_SESSION['game_state']);
         return 0;
     }
 
+    function updateScore($game) {
+        $topScore = 0;
+        $bonus = 0;
+        $bottomScore = 0;
+    
+        foreach ($game['scores'] as $box => $score) {
+            switch ($box) {
+                case 'ones':
+                case 'twos':
+                case 'threes':
+                case 'fours':
+                case 'fives':
+                case 'sixes':
+                    $topScore += $score;
+                    break;
+                default:
+                    $bottomScore += $score;
+            }
+        }
+    
+        if ($topScore >= 63) {
+            $bonus = 35;
+        }
+    
+        return $topScore + $bonus + $bottomScore;
+    }
 
 
 ?>

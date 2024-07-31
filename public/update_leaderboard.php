@@ -1,5 +1,7 @@
-
 <?php
+
+require 'Database.php';
+
 session_start();
 
 
@@ -13,13 +15,9 @@ $new_score = $data['score'];
 $new_player = isset($data['player']) ? $data['player'] : 'Anonymous'; 
 
 
-$_SESSION['leaderboard'][] = ['score' => $new_score, 'player' => $new_player];
+$_SESSION['leaderboard'][$new_player] = $new_score;
 
-
-$_SESSION['leaderboard'] = array_slice($_SESSION['leaderboard'], 0, 10);
-
+savePlayerScore($new_player, $new_score);
 
 echo json_encode($_SESSION['leaderboard']);
-?>
-
 ?>
