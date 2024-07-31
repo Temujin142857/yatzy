@@ -218,22 +218,8 @@
     
 
     function fullReset() {
-        updateLeaderBoard(playerName, game.score);
+        addToLeaderboard(playerName, game.total_score);
         initialiseGame();
-    }
-
-    function updateLeaderboard(name, score) {
-        fetch('update_leaderboard.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name, score: score })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Leaderboard update response:', data);
-            fetchLeaderboard(); // Refresh the leaderboard to include the new score
-        })
-        .catch(error => console.error('Error adding to leaderboard:', error));
     }
 
     // Leaderboard functions
