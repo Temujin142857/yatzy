@@ -11,7 +11,11 @@
 <h4 style="margin-bottom: 0">Instructions:</h4>
 <p style="margin-bottom: 30px">Click the button to roll the dice, click on a die to keep it, you can reroll up to three times.
     <br> Once you're finished rolling click on a row to choose where to put your points!</p>
-
+    <div>
+        <label for="player-name">Enter your name: </label>
+        <input type="text" id="player-name" placeholder="Your Name">
+        <button onclick="savePlayerName()" style="cursor: pointer; padding: 5px">Save Name</button>
+    </div>
 <div id="game-container" style="display: flex">
     <div id="score-container">
         <table class="card" id="score-card">
@@ -68,6 +72,7 @@
 
 <script>
     let game;
+    let playerName = "";
     const scoreCardDisplay = document.getElementById('score-card').getElementsByTagName('tbody')[0];
     const dice = [document.getElementById("die-1"), document.getElementById("die-2"), document.getElementById("die-3"), document.getElementById("die-4"), document.getElementById("die-5")];
     const scoreElement = document.getElementById("game-score");
@@ -77,6 +82,17 @@
         initialiseGame();
         fetchLeaderboard();
     });
+
+    function savePlayerName() {
+        const nameInput = document.getElementById("player-name").value;
+        if (nameInput) {
+            playerName = nameInput;
+            console.log("Player name saved:", playerName);
+            initialiseGame();
+        } else {
+            alert("Please enter your name.");
+        }
+    }
 
     function initialiseGame() {
         fetch('start_game.php')
@@ -202,7 +218,22 @@
     
 
     function fullReset() {
+        updateLeaderBoard(playerName, game.score);
         initialiseGame();
+    }
+
+    function updateLeaderboard(name, score) {
+        fetch('update_leaderboard.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name, score: score })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Leaderboard update response:', data);
+            fetchLeaderboard(); // Refresh the leaderboard to include the new score
+        })
+        .catch(error => console.error('Error adding to leaderboard:', error));
     }
 
     // Leaderboard functions
