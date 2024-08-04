@@ -1,7 +1,7 @@
 
 <?php
 
-require 'Database.php';
+require 'database.php';
 
 session_start();
 
